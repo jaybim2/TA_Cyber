@@ -74,25 +74,32 @@ Relasi: Organization hasMany User/Product/Inquiry. User belongsTo Organization. 
 
 ---
 
-### T15 — Slice 4a: Landing Page Platform
+### T16 — Slice 4b: Self-testing, deploy, dan README final
 
-**Tujuan:** Pengunjung umum paham platform ini dalam 30 detik, lalu bisa daftar atau masuk.
+**Tujuan:** Aplikasi live, aman, dan bisa diserahkan dengan bukti.
 
 **Prompt untuk Antigravity:**
 
-> Kerjakan T15 saja, layar Landing Page Platform. Buat halaman publik statis dengan hero, cara kerja, fitur, dan contoh UMKM. Jangan buat dashboard atau CRUD di task ini.
+> Kerjakan T16 saja, dan hanya setelah T01–T15 selesai. Lakukan self-testing keamanan, siapkan deploy, dan rapikan README serta outline laporan. Jangan tambah fitur baru di task ini.
 
 **Langkah:**
 
-- [x] Header: nama platform, menu Beranda/Cara Kerja/Fitur, tombol Masuk dan Daftar UMKM
-- [x] Hero: headline "Website UMKM Rapi, Tanpa Bangun dari Nol", subheadline, tombol Daftar UMKM dan Lihat Contoh Halaman
-- [x] 3 langkah: Daftar UMKM → Lengkapi Profil & Produk → Bagikan Link Halaman
-- [x] 4 kartu fitur + 1 kartu contoh Toko ABC yang mengarah ke `/u/toko-abc`
-- [x] Footer: kontak vendor, link Masuk/Daftar
-- [x] Kalau sudah login, `/` diarahkan ke dashboard, bukan landing lagi
+- [x] Self-testing, dokumentasikan di tabel skenario/cara uji/hasil/perbaikan, minimal 5 skenario, dengan bukti sebelum-sesudah untuk yang diperbaiki:
 
-**Kriteria selesai:** Pengunjung yang belum login melihat landing, yang sudah login langsung ke dashboard. Tidak ada harga atau pembayaran di layar ini.
+- SQL Injection di kolom cari produk dan parameter URL
+- XSS di deskripsi produk dan pesan pertanyaan
+- IDOR: admin UMKM A membuka produk/pertanyaan UMKM B lewat ID/slug di URL
+- Peran: admin UMKM membuka `/vendor`, pengunjung membuka `/dashboard`
+- Password lemah ditolak + rate limiting login + logout mengunci dashboard
+- HTTPS + security headers (securityheaders.com / SSL Labs)
+- Secret tidak ter-commit + audit dependency
 
-**Jangan lakukan:** Jangan tambah template atau fitur baru di task ini.
+- [x] Deploy: hosting publik via FQDN, wajib HTTPS valid, bukan localhost/IP mentah, aplikasi tetap aktif sampai nilai diumumkan
+- [x] README final: deskripsi, fitur, teknologi, cara instalasi dan jalan lokal, konfigurasi env tanpa nilai rahasia, URL aplikasi, akun uji (vendor + admin UMKM), ringkasan pemakaian AI dan hasil self-testing
+- [x] Outline laporan PDF: identitas, latar belakang dan tujuan, fitur utama, arsitektur + diagram, penerapan keamanan, potensi skripsi, hasil self-testing, screenshot (login, kelola produk, halaman publik, laporan, bukti HTTPS), kendala dan rencana perbaikan
+
+**Kriteria selesai:** URL publik bisa dibuka dosen, login akun uji berhasil, laporan dan README lengkap, dan tidak ada secret di repo.
+
+**Jangan lakukan:** Jangan tambah fitur di task ini, apalagi payment, booking, atau template baru.
 
 ---
