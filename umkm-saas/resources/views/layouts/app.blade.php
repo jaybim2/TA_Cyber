@@ -75,17 +75,20 @@
                     <!-- Navigasi Menu Sidebar -->
                     <nav class="px-3 py-5 space-y-1 text-sm font-medium">
                         @if(Auth::user()->isVendor())
-                            <!-- Menu Navigasi Vendor (Layar 4 & 5) -->
+                            <!-- Menu Navigasi Vendor (Layar 4 & 5 Figcraft) -->
                             <a href="{{ route('vendor.dashboard') }}"
-                                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition relative {{ request()->is('vendor') && !request()->has('tab') ? 'bg-surface-sidebarActive text-white font-semibold' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
-                                @if(request()->is('vendor') && !request()->has('tab'))
+                                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition relative {{ request()->routeIs('vendor.dashboard') ? 'bg-surface-sidebarActive text-white font-semibold' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                                @if(request()->routeIs('vendor.dashboard'))
                                     <span class="absolute left-0 top-2 bottom-2 w-1 bg-brand-600 rounded-r"></span>
                                 @endif
                                 <span class="text-base">📊</span>
                                 <span>Dashboard</span>
                             </a>
-                            <a href="{{ route('vendor.dashboard') }}#daftar-umkm"
-                                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition relative text-slate-400 hover:text-white hover:bg-white/5">
+                            <a href="{{ route('vendor.umkm.index') }}"
+                                class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition relative {{ request()->routeIs('vendor.umkm.*') ? 'bg-surface-sidebarActive text-white font-semibold' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                                @if(request()->routeIs('vendor.umkm.*'))
+                                    <span class="absolute left-0 top-2 bottom-2 w-1 bg-brand-600 rounded-r"></span>
+                                @endif
                                 <span class="text-base">🏪</span>
                                 <span>Kelola UMKM</span>
                             </a>

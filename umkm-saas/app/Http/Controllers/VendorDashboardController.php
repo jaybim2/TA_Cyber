@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Inquiry;
 use App\Models\Organization;
 use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -12,7 +14,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class VendorDashboardController extends Controller
 {
     /**
-     * Tampilkan Dashboard Vendor Platform (Layar 4) & Daftar UMKM mode baca saja (Layar 5).
+     * Tampilkan Dashboard Vendor Platform (Layar 4 Figcraft).
      * Angka agregat seluruh ekosistem tanpa menampilkan isi pesan UMKM.
      */
     public function index(): View
@@ -24,8 +26,8 @@ class VendorDashboardController extends Controller
         $totalProducts = Product::aggregateCount();
         $totalInquiries = Inquiry::aggregateCount(); // Angka saja, bukan isi pesan
 
-        // Daftar UMKM vendor (mode baca saja): nama, slug, kategori, aktif/tidak
-        $organizations = Organization::latest()->get([
+        // 5 UMKM Pendaftar Terbaru (Layar 4 Figcraft)
+        $organizations = Organization::latest()->take(5)->get([
             'id',
             'name',
             'slug',
@@ -43,6 +45,147 @@ class VendorDashboardController extends Controller
             ],
             'organizations' => $organizations,
         ]);
+    }
+
+    /**
+     * Tampilkan Layar 5 Figcraft: Kelola Seluruh UMKM Terdaftar.
+     * Dilengkapi filter nama/slug, filter status (Semua, Aktif, Nonaktif),
+     * toggle status cepat, serta formulir tambah / ubah UMKM.
+     */
+    public function umkmIndex(Request $request): View
+    {
+        $user = Auth::user();
+        $query = Organization::query();
+
+        // Filter Pencarian Nama / Slug
+        if ($request->filled('q')) {
+            $search = '%' . trim($request->q) . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                  ->orWhere('slug', 'like', $search);
+            });
+        }
+
+        // Filter Status Aktif / Nonaktif
+        if ($request->filled('status')) {
+            if ($request->status === 'Aktif') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'Nonaktif') {
+                $query->where('is_active', false);
+            }
+        }
+
+        $organizations = $query->latest('id')->get();
+
+        // UMKM terpilih jika sedang dalam mode edit (?edit={id})
+        $selectedUmkm = null;
+        if ($request->filled('edit')) {
+            $selectedUmkm = Organization::find($request->edit);
+        }
+
+        return view('vendor.umkm', [
+            'user' => $user,
+            'organizations' => $organizations,
+            'selectedUmkm' => $selectedUmkm,
+            'filters' => [
+                'q' => $request->q,
+                'status' => $request->status,
+            ],
+            'counts' => [
+                'all' => Organization::count(),
+                'active' => Organization::where('is_active', true)->count(),
+                'inactive' => Organization::where('is_active', false)->count(),
+            ],
+        ]);
+    }
+
+    /**
+     * Simpan UMKM Baru dari Form Vendor (Layar 5).
+     */
+    public function storeUmkm(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:150'],
+            'slug' => ['required', 'string', 'max:150', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', 'unique:organizations,slug'],
+            'category' => ['required', 'string', 'max:100'],
+            'phone' => ['required', 'string', 'max:30'],
+            'email' => ['nullable', 'email', 'max:150'],
+            'status' => ['required', 'in:Aktif,Nonaktif'],
+        ], [
+            'name.required' => 'Nama UMKM wajib diisi.',
+            'slug.required' => 'Slug website wajib diisi.',
+            'slug.regex' => 'Format slug hanya boleh huruf kecil, angka, dan tanda hubung (-).',
+            'slug.unique' => 'Slug website sudah digunakan oleh UMKM lain.',
+            'category.required' => 'Bidang usaha wajib dipilih.',
+            'phone.required' => 'Nomor WhatsApp / telepon wajib diisi.',
+        ]);
+
+        Organization::create([
+            'name' => trim($validated['name']),
+            'slug' => strtolower(trim($validated['slug'])),
+            'category' => $validated['category'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'] ?? null,
+            'is_active' => $validated['status'] === 'Aktif',
+        ]);
+
+        return redirect()->route('vendor.umkm.index')->with('success', 'UMKM "' . $validated['name'] . '" berhasil ditambahkan.');
+    }
+
+    /**
+     * Perbarui data UMKM dari Form Vendor (Layar 5).
+     */
+    public function updateUmkm(Request $request, Organization $organization): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:150'],
+            'slug' => ['required', 'string', 'max:150', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', 'unique:organizations,slug,' . $organization->id],
+            'category' => ['required', 'string', 'max:100'],
+            'phone' => ['required', 'string', 'max:30'],
+            'email' => ['nullable', 'email', 'max:150'],
+            'status' => ['required', 'in:Aktif,Nonaktif'],
+        ], [
+            'name.required' => 'Nama UMKM wajib diisi.',
+            'slug.required' => 'Slug website wajib diisi.',
+            'slug.regex' => 'Format slug hanya boleh huruf kecil, angka, dan tanda hubung (-).',
+            'slug.unique' => 'Slug website sudah digunakan oleh UMKM lain.',
+            'category.required' => 'Bidang usaha wajib dipilih.',
+            'phone.required' => 'Nomor WhatsApp / telepon wajib diisi.',
+        ]);
+
+        $organization->update([
+            'name' => trim($validated['name']),
+            'slug' => strtolower(trim($validated['slug'])),
+            'category' => $validated['category'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'] ?? null,
+            'is_active' => $validated['status'] === 'Aktif',
+        ]);
+
+        return redirect()->route('vendor.umkm.index')->with('success', 'Data UMKM "' . $organization->name . '" berhasil diperbarui.');
+    }
+
+    /**
+     * Toggle status aktif / nonaktif UMKM secara instan (Layar 5).
+     */
+    public function toggleStatus(Organization $organization): RedirectResponse
+    {
+        $organization->is_active = !$organization->is_active;
+        $organization->save();
+
+        $statusLabel = $organization->is_active ? 'diaktifkan' : 'dinonaktifkan';
+        return back()->with('success', 'Status operasional UMKM "' . $organization->name . '" berhasil ' . $statusLabel . '.');
+    }
+
+    /**
+     * Hapus UMKM secara permanen (Layar 5).
+     */
+    public function destroyUmkm(Organization $organization): RedirectResponse
+    {
+        $name = $organization->name;
+        $organization->delete();
+
+        return redirect()->route('vendor.umkm.index')->with('success', 'UMKM "' . $name . '" beserta datanya berhasil dihapus.');
     }
 
     /**
@@ -127,4 +270,3 @@ class VendorDashboardController extends Controller
         return $value;
     }
 }
-

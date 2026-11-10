@@ -16,7 +16,7 @@
                 class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#e1e8e3] bg-white hover:bg-[#f5f8fa] text-[#141d1a] text-xs font-semibold shadow-sm transition">
                 <span>📥 Ekspor CSV Agregat</span>
             </a>
-            <a href="{{ route('register-umkm') }}"
+            <a href="{{ route('vendor.umkm.index') }}"
                 class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#16a34a] hover:bg-[#15803d] text-white text-xs font-semibold shadow-sm transition">
                 <span>+ Tambah UMKM</span>
             </a>
@@ -78,15 +78,18 @@
         </div>
     </div>
 
-    <!-- Tabel Daftar UMKM Terdaftar Figcraft Screen 4 & 5 -->
+    <!-- Tabel Daftar 5 UMKM Terbaru Figcraft Screen 4 -->
     <div class="bg-white border border-[#e1e8e3] rounded-2xl shadow-sm overflow-hidden">
         <div class="p-6 border-b border-[#e1e8e3] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-base font-bold text-[#141d1a]">Daftar Seluruh UMKM Terdaftar</h2>
+                <h2 class="text-base font-bold text-[#141d1a]">5 UMKM Pendaftar Terbaru</h2>
                 <p class="text-xs text-[#61716a] mt-0.5">Menjaga privasi tenant: detail pesan dan percakapan hanya dapat diakses oleh admin UMKM terkait.</p>
             </div>
-            <div class="text-xs text-[#61716a] font-medium">
-                Total: <span class="font-bold text-[#141d1a]">{{ $organizations->count() }}</span> UMKM
+            <div>
+                <a href="{{ route('vendor.umkm.index') }}" class="text-xs font-semibold text-[#16a34a] hover:underline flex items-center gap-1">
+                    <span>Kelola Seluruh UMKM</span>
+                    <span>&rarr;</span>
+                </a>
             </div>
         </div>
 

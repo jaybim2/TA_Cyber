@@ -58,6 +58,11 @@ Route::middleware(['auth', 'role:umkm_admin'])->group(function () {
 // Layar 4 & 5: Dashboard Vendor & Daftar UMKM (Hanya Vendor yang terotentikasi)
 Route::middleware(['auth', 'role:vendor'])->group(function () {
     Route::get('/vendor', [VendorDashboardController::class, 'index'])->name('vendor.dashboard');
+    Route::get('/vendor/umkm', [VendorDashboardController::class, 'umkmIndex'])->name('vendor.umkm.index');
+    Route::post('/vendor/umkm', [VendorDashboardController::class, 'storeUmkm'])->name('vendor.umkm.store');
+    Route::put('/vendor/umkm/{organization}', [VendorDashboardController::class, 'updateUmkm'])->name('vendor.umkm.update');
+    Route::patch('/vendor/umkm/{organization}/status', [VendorDashboardController::class, 'toggleStatus'])->name('vendor.umkm.status');
+    Route::delete('/vendor/umkm/{organization}', [VendorDashboardController::class, 'destroyUmkm'])->name('vendor.umkm.destroy');
     Route::get('/vendor/ekspor', [VendorDashboardController::class, 'exportCsv'])->name('vendor.export');
 });
 
