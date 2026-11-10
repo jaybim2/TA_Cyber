@@ -44,3 +44,4 @@ class VendorDashboardController extends Controller
         ]);
     }
 }
+
