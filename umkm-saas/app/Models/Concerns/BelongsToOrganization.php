@@ -42,3 +42,4 @@ trait BelongsToOrganization
         return $query->withoutGlobalScope(TenantScope::class);
     }
 }
+
