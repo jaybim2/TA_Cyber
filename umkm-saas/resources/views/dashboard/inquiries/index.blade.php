@@ -1,221 +1,125 @@
-@extends('layouts.app', ['title' => 'Pertanyaan Masuk - ' . ($organization->name ?? 'Admin')])
+@extends('layouts.app', ['title' => 'Kotak Masuk Pertanyaan Pengunjung - 🌿 UMKM Kita'])
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-    <!-- Breadcrumb & Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
+<div class="space-y-6">
+    <!-- Topbar Figcraft Screen 9 -->
+    <div class="bg-white border border-[#e1e8e3] rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-sm">
         <div>
-            <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1.5 font-medium">
-                <a href="{{ route('dashboard') }}" class="hover:text-blue-600 transition">Dashboard</a>
-                <span>/</span>
-                <span class="text-slate-800 font-semibold">Pertanyaan Masuk</span>
-            </nav>
-            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
-                <span>Daftar Pertanyaan Masuk</span>
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">
-                    {{ $inquiries->total() }} Pesan
-                </span>
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1">
-                Kelola dan tindak lanjuti pesan masuk dari calon pembeli atau pengunjung halaman profil UMKM Anda.
-            </p>
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#dcfce7] text-[#15803d] text-xs font-semibold mb-2">
+                <span>Portal UMKM</span>
+            </div>
+            <h1 class="text-2xl font-bold text-[#141d1a]">Kotak Masuk Pertanyaan Pengunjung</h1>
+            <p class="text-xs text-[#61716a] mt-0.5">Tanggapi pesan pertanyaan calon pelanggan dari website etalasemu.</p>
         </div>
-
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
             @if(isset($organization->slug))
                 <a href="{{ url('/u/' . $organization->slug . '#pertanyaan') }}" target="_blank"
-                    class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-200 shadow-sm transition">
-                    <span>Lihat Form Publik</span>
-                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
+                    class="px-4 py-2 rounded-xl border border-[#e1e8e3] bg-white text-[#141d1a] hover:bg-[#f5f8fa] text-xs font-semibold shadow-sm transition">
+                    Lihat Form Publik ↗
                 </a>
             @endif
         </div>
     </div>
 
-    <!-- Tab Filter Status -->
-    <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
+    <!-- Filter Pills Tab Figcraft Screen 9 -->
+    <div class="flex flex-wrap items-center gap-2">
         <a href="{{ route('inquiries.index', array_filter(['q' => $filters['q'] ?? null])) }}"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition {{ empty($filters['status']) ? 'bg-slate-900 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
-            Semua Pesan ({{ $counts['all'] }})
+            class="px-4 py-2 rounded-xl text-xs font-semibold transition {{ empty($filters['status']) ? 'bg-[#16a34a] text-white shadow-sm' : 'bg-white border border-[#e1e8e3] text-[#61716a] hover:bg-[#f5f8fa]' }}">
+            Semua ({{ $counts['all'] }})
         </a>
         <a href="{{ route('inquiries.index', array_filter(['status' => 'Baru', 'q' => $filters['q'] ?? null])) }}"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 {{ ($filters['status'] ?? '') === 'Baru' ? 'bg-rose-600 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
-            <span class="w-2 h-2 rounded-full {{ ($filters['status'] ?? '') === 'Baru' ? 'bg-white' : 'bg-rose-500' }}"></span>
-            <span>Baru ({{ $counts['baru'] }})</span>
+            class="px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 {{ ($filters['status'] ?? '') === 'Baru' ? 'bg-[#fee2e2] text-[#b91c1c] border border-[#fca5a5] font-bold' : 'bg-white border border-[#e1e8e3] text-[#b91c1c] hover:bg-[#fee2e2]/40' }}">
+            <span>🔴 Baru ({{ $counts['baru'] }})</span>
         </a>
         <a href="{{ route('inquiries.index', array_filter(['status' => 'Dibalas', 'q' => $filters['q'] ?? null])) }}"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 {{ ($filters['status'] ?? '') === 'Dibalas' ? 'bg-amber-600 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
-            <span class="w-2 h-2 rounded-full {{ ($filters['status'] ?? '') === 'Dibalas' ? 'bg-white' : 'bg-amber-500' }}"></span>
-            <span>Dibalas ({{ $counts['dibalas'] }})</span>
+            class="px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 {{ ($filters['status'] ?? '') === 'Dibalas' ? 'bg-[#fef3c7] text-[#b45309] border border-[#fde68a] font-bold' : 'bg-white border border-[#e1e8e3] text-[#b45309] hover:bg-[#fef3c7]/40' }}">
+            <span>🟡 Dibalas ({{ $counts['dibalas'] }})</span>
         </a>
         <a href="{{ route('inquiries.index', array_filter(['status' => 'Selesai', 'q' => $filters['q'] ?? null])) }}"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 {{ ($filters['status'] ?? '') === 'Selesai' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
-            <span class="w-2 h-2 rounded-full {{ ($filters['status'] ?? '') === 'Selesai' ? 'bg-white' : 'bg-emerald-500' }}"></span>
-            <span>Selesai ({{ $counts['selesai'] }})</span>
+            class="px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 {{ ($filters['status'] ?? '') === 'Selesai' ? 'bg-[#dcfce7] text-[#15803d] border border-[#86efac] font-bold' : 'bg-white border border-[#e1e8e3] text-[#15803d] hover:bg-[#dcfce7]/40' }}">
+            <span>🟢 Selesai ({{ $counts['selesai'] }})</span>
         </a>
     </div>
 
-    <!-- Filter & Pencarian Bar -->
-    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-        <form method="GET" action="{{ route('inquiries.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-            <!-- Hidden status jika sedang difilter tab -->
+    <!-- Search Box Bar -->
+    <div class="bg-white border border-[#e1e8e3] rounded-2xl p-4 shadow-sm">
+        <form method="GET" action="{{ route('inquiries.index') }}" class="flex items-center gap-3">
             @if(!empty($filters['status']))
                 <input type="hidden" name="status" value="{{ $filters['status'] }}">
             @endif
-
-            <!-- Pencarian Kata Kunci -->
-            <div class="sm:col-span-8">
-                <label for="q" class="block text-xs font-semibold text-slate-700 mb-1">Cari Pertanyaan</label>
-                <div class="relative">
-                    <input type="text" name="q" id="q" value="{{ $filters['q'] ?? '' }}"
-                        placeholder="Ketik nama pengunjung, kontak, atau isi pesan..."
-                        class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </div>
+            <div class="flex-1">
+                <input type="text" name="q" id="q" value="{{ $filters['q'] ?? '' }}"
+                    placeholder="🔍 Ketik nama pengirim, kontak, atau isi pesan pertanyaan..."
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-[#e1e8e3] bg-[#fcfdfc] text-xs text-[#141d1a] focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a] transition">
             </div>
-
-            <!-- Tombol Aksi Pencarian -->
-            <div class="sm:col-span-4 flex items-center gap-2">
-                <button type="submit"
-                    class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <span>Cari Pesan</span>
-                </button>
-                @if(!empty($filters['q']) || !empty($filters['status']))
-                    <a href="{{ route('inquiries.index') }}"
-                        title="Reset semua filter pencarian"
-                        class="p-2 rounded-xl border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </a>
-                @endif
-            </div>
+            <button type="submit"
+                class="px-5 py-2.5 rounded-xl bg-[#16a34a] hover:bg-[#15803d] text-white text-xs font-semibold transition">
+                Cari
+            </button>
+            @if(!empty($filters['q']) || !empty($filters['status']))
+                <a href="{{ route('inquiries.index') }}" class="text-xs text-[#b91c1c] font-semibold hover:underline px-2">
+                    Reset
+                </a>
+            @endif
         </form>
     </div>
 
-    <!-- Tabel Daftar Pertanyaan -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        @if($inquiries->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs text-slate-600">
-                    <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
-                        <tr>
-                            <th scope="col" class="py-3.5 px-4 w-36">Waktu Masuk</th>
-                            <th scope="col" class="py-3.5 px-4 w-48">Pengirim &amp; Kontak</th>
-                            <th scope="col" class="py-3.5 px-4">Ringkasan Pesan</th>
-                            <th scope="col" class="py-3.5 px-4 text-center w-28">Status</th>
-                            <th scope="col" class="py-3.5 px-4 text-right w-24">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @foreach($inquiries as $inquiry)
-                            <tr class="hover:bg-slate-50/80 transition {{ $inquiry->status === 'Baru' ? 'bg-rose-50/20' : '' }}">
-                                <!-- Waktu Masuk -->
-                                <td class="py-3.5 px-4 whitespace-nowrap text-slate-500">
-                                    <div class="font-semibold text-slate-800">{{ $inquiry->created_at->format('d M Y') }}</div>
-                                    <div class="text-[11px] text-slate-400">{{ $inquiry->created_at->format('H:i') }} WIB</div>
-                                </td>
-
-                                <!-- Nama & Kontak -->
-                                <td class="py-3.5 px-4">
-                                    <div class="font-bold text-slate-900 text-sm">
-                                        {{ $inquiry->visitor_name }}
-                                    </div>
-                                    @if($inquiry->visitor_contact)
-                                        <div class="text-[11px] text-blue-600 font-mono mt-0.5 truncate max-w-xs">
-                                            {{ $inquiry->visitor_contact }}
-                                        </div>
-                                    @else
-                                        <div class="text-[11px] text-slate-400 italic mt-0.5">
-                                            Tanpa kontak
-                                        </div>
-                                    @endif
-                                </td>
-
-                                <!-- Pesan (Di-escape secara aman) -->
-                                <td class="py-3.5 px-4">
-                                    <p class="text-xs text-slate-700 line-clamp-2 leading-relaxed">
-                                        {{ $inquiry->message }}
-                                    </p>
-                                </td>
-
-                                <!-- Status Badge -->
-                                <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                                    @if($inquiry->status === 'Baru')
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                                            <span>Baru</span>
-                                        </span>
-                                    @elseif($inquiry->status === 'Dibalas')
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                            <span>Dibalas</span>
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                            <span>Selesai</span>
-                                        </span>
-                                    @endif
-                                </td>
-
-                                <!-- Aksi -->
-                                <td class="py-3.5 px-4 text-right whitespace-nowrap">
-                                    <a href="{{ route('inquiries.show', $inquiry) }}"
-                                        class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-semibold transition"
-                                        title="Buka detail pertanyaan">
-                                        <span>Buka</span>
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination Bar -->
-            @if($inquiries->hasPages())
-                <div class="p-4 border-t border-slate-200 bg-slate-50/50">
-                    {{ $inquiries->links() }}
-                </div>
-            @endif
-        @else
-            <!-- Zero State / Kosong -->
-            <div class="py-12 px-4 text-center">
-                <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 border border-amber-100">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                    </svg>
-                </div>
-                <h3 class="text-base font-bold text-slate-800">Tidak ada pertanyaan ditemukan</h3>
-                <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                    @if(!empty($filters['q']) || !empty($filters['status']))
-                        Tidak ada pertanyaan yang sesuai dengan filter pencarian Anda. Silakan coba reset filter.
-                    @else
-                        Belum ada pertanyaan masuk dari pengunjung untuk saat ini. Form pertanyaan aktif di halaman profil publik Anda.
-                    @endif
-                </p>
-                @if(!empty($filters['q']) || !empty($filters['status']))
-                    <div class="mt-4">
-                        <a href="{{ route('inquiries.index') }}"
-                            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
-                            <span>Reset Filter</span>
-                        </a>
+    <!-- Daftar Kartu Pertanyaan Figcraft Screen 9 (QCard) -->
+    <div class="space-y-3">
+        @forelse($inquiries as $inquiry)
+            <a href="{{ route('inquiries.show', $inquiry) }}"
+                class="block bg-white border border-[#e1e8e3] rounded-2xl p-5 shadow-sm hover:border-[#16a34a] hover:shadow transition group">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-3">
+                            <h3 class="font-bold text-sm text-[#141d1a] group-hover:text-[#16a34a] transition">
+                                {{ $inquiry->visitor_name }}
+                            </h3>
+                            <span class="text-xs text-[#61716a]">
+                                &bull; {{ $inquiry->created_at->format('d M, H:i') }}
+                            </span>
+                        </div>
+                        <p class="text-xs text-[#61716a] mt-1 line-clamp-2">
+                            {{ $inquiry->message }}
+                        </p>
+                        @if($inquiry->visitor_contact)
+                            <p class="text-[11px] text-[#16a34a] font-medium mt-1">
+                                Kontak: {{ $inquiry->visitor_contact }}
+                            </p>
+                        @endif
                     </div>
-                @endif
+                    <div class="shrink-0 flex items-center gap-3">
+                        @if($inquiry->status === 'Baru')
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#fee2e2] text-[#b91c1c]">
+                                Baru
+                            </span>
+                        @elseif($inquiry->status === 'Dibalas')
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#fef3c7] text-[#b45309]">
+                                Dibalas
+                            </span>
+                        @else
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#dcfce7] text-[#15803d]">
+                                Selesai
+                            </span>
+                        @endif
+                        <span class="text-xs text-[#16a34a] font-bold group-hover:translate-x-1 transition-transform">
+                            Detail &rarr;
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <div class="bg-white border border-[#e1e8e3] rounded-2xl p-12 text-center text-xs text-[#61716a]">
+                <p class="font-semibold text-[#141d1a]">Tidak ada pertanyaan ditemukan.</p>
+                <p class="mt-1">Pesan dari formulir etalase publik tokomu akan otomatis masuk ke sini.</p>
+            </div>
+        @endforelse
+
+        @if($inquiries->hasPages())
+            <div class="p-4 bg-white border border-[#e1e8e3] rounded-2xl">
+                {{ $inquiries->links() }}
             </div>
         @endif
     </div>
 </div>
 @endsection
-

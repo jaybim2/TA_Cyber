@@ -29,9 +29,15 @@ class UmkmDashboardController extends Controller
         $inquiriesSelesai = Inquiry::where('status', 'Selesai')->count();
         $totalInquiries = Inquiry::count();
 
+        // 5 Produk dan Pertanyaan Terbaru (Layar 6 Figcraft)
+        $recentProducts = Product::latest()->take(5)->get();
+        $recentInquiries = Inquiry::latest()->take(5)->get();
+
         return view('dashboard', [
             'user' => $user,
             'organization' => $organization,
+            'recentProducts' => $recentProducts,
+            'recentInquiries' => $recentInquiries,
             'stats' => [
                 'total_products' => $totalProducts,
                 'active_products' => $activeProducts,
@@ -44,4 +50,3 @@ class UmkmDashboardController extends Controller
         ]);
     }
 }
-

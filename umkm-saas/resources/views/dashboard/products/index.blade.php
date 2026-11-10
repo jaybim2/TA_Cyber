@@ -1,194 +1,129 @@
-@extends('layouts.app', ['title' => 'Katalog Produk - ' . ($organization->name ?? 'Admin')])
+@extends('layouts.app', ['title' => 'Manajemen Katalog Produk - 🌿 UMKM Kita'])
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-    <!-- Breadcrumb & Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
+<div class="space-y-6">
+    <!-- Topbar Layar 8 Figcraft -->
+    <div class="bg-white border border-[#e1e8e3] rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-sm">
         <div>
-            <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1.5 font-medium">
-                <a href="{{ route('dashboard') }}" class="hover:text-blue-600 transition">Dashboard</a>
-                <span>/</span>
-                <span class="text-slate-800 font-semibold">Katalog Produk</span>
-            </nav>
-            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
-                <span>Katalog Produk</span>
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">
-                    {{ $products->total() }} Produk
-                </span>
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1">
-                Kelola daftar produk dan layanan yang ditampilkan pada halaman profil UMKM Anda.
-            </p>
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#dcfce7] text-[#15803d] text-xs font-semibold mb-2">
+                <span>Portal UMKM</span>
+            </div>
+            <h1 class="text-2xl font-bold text-[#141d1a]">Manajemen Katalog Produk</h1>
+            <p class="text-xs text-[#61716a] mt-0.5">Kelola produk atau layanan etalase tokomu dengan rapi dan aman.</p>
         </div>
-
         <div class="flex items-center gap-3">
             <a href="{{ route('products.create') }}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm hover:shadow transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                <span>Tambah Produk Baru</span>
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#16a34a] hover:bg-[#15803d] text-white text-xs font-semibold shadow-sm transition">
+                <span>+ Tambah Produk Baru</span>
             </a>
         </div>
     </div>
 
-    <!-- Filter & Pencarian Bar -->
-    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-        <form method="GET" action="{{ route('products.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-            <!-- Pencarian Nama -->
-            <div class="sm:col-span-5">
-                <label for="q" class="block text-xs font-semibold text-slate-700 mb-1">Cari Produk</label>
-                <div class="relative">
-                    <input type="text" name="q" id="q" value="{{ $filters['q'] ?? '' }}"
-                        placeholder="Ketik nama produk..."
-                        class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </div>
+    <!-- Box Filter & Pencarian Layar 8 Figcraft -->
+    <div class="bg-white border border-[#e1e8e3] rounded-2xl p-5 shadow-sm">
+        <form method="GET" action="{{ route('products.index') }}" class="flex flex-wrap items-center gap-3">
+            <!-- Search Box -->
+            <div class="flex-1 min-w-[240px]">
+                <input type="text" name="q" id="q" value="{{ $filters['q'] ?? '' }}"
+                    placeholder="🔍 Cari Nama Produk..."
+                    class="w-full px-3.5 py-2.5 rounded-xl border border-[#e1e8e3] bg-[#fcfdfc] text-xs text-[#141d1a] focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a] transition">
             </div>
 
-            <!-- Filter Kategori -->
-            <div class="sm:col-span-3">
-                <label for="category" class="block text-xs font-semibold text-slate-700 mb-1">Kategori</label>
-                <select name="category" id="category"
-                    class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    <option value="">Semua Kategori</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category }}" {{ ($filters['category'] ?? '') === $category ? 'selected' : '' }}>
-                            {{ $category }}
-                        </option>
-                    @endforeach
-                </select>
+            <!-- Status Pills Filter -->
+            <div class="flex items-center gap-2">
+                <a href="{{ route('products.index', array_merge(request()->except('status'), ['status' => ''])) }}"
+                    class="px-4 py-2 rounded-xl text-xs font-semibold transition {{ empty($filters['status']) ? 'bg-[#16a34a] text-white' : 'bg-[#f5f8fa] text-[#61716a] border border-[#e1e8e3] hover:bg-[#e1e8e3]' }}">
+                    Semua
+                </a>
+                <a href="{{ route('products.index', array_merge(request()->except('status'), ['status' => 'Tampil'])) }}"
+                    class="px-4 py-2 rounded-xl text-xs font-semibold transition {{ ($filters['status'] ?? '') === 'Tampil' ? 'bg-[#16a34a] text-white' : 'bg-[#f5f8fa] text-[#61716a] border border-[#e1e8e3] hover:bg-[#e1e8e3]' }}">
+                    Tampil
+                </a>
+                <a href="{{ route('products.index', array_merge(request()->except('status'), ['status' => 'Sembunyi'])) }}"
+                    class="px-4 py-2 rounded-xl text-xs font-semibold transition {{ ($filters['status'] ?? '') === 'Sembunyi' ? 'bg-[#16a34a] text-white' : 'bg-[#f5f8fa] text-[#61716a] border border-[#e1e8e3] hover:bg-[#e1e8e3]' }}">
+                    Sembunyi
+                </a>
             </div>
 
-            <!-- Filter Status -->
-            <div class="sm:col-span-2">
-                <label for="status" class="block text-xs font-semibold text-slate-700 mb-1">Status</label>
-                <select name="status" id="status"
-                    class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    <option value="">Semua Status</option>
-                    <option value="Tampil" {{ ($filters['status'] ?? '') === 'Tampil' ? 'selected' : '' }}>Tampil</option>
-                    <option value="Sembunyi" {{ ($filters['status'] ?? '') === 'Sembunyi' ? 'selected' : '' }}>Sembunyi</option>
-                </select>
-            </div>
-
-            <!-- Tombol Aksi Filter -->
-            <div class="sm:col-span-2 flex items-center gap-2">
-                <button type="submit"
-                    class="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                    </svg>
-                    <span>Filter</span>
-                </button>
-                @if(!empty($filters['q']) || !empty($filters['category']) || !empty($filters['status']))
-                    <a href="{{ route('products.index') }}"
-                        title="Reset filter pencarian"
-                        class="p-2 rounded-xl border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </a>
-                @endif
-            </div>
+            @if(!empty($filters['q']) || !empty($filters['status']) || !empty($filters['category']))
+                <a href="{{ route('products.index') }}" class="text-xs text-[#b91c1c] font-semibold hover:underline px-2">
+                    Reset
+                </a>
+            @endif
         </form>
     </div>
 
-    <!-- Tabel Daftar Produk -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <!-- Tabel Daftar Produk Figcraft Layar 8 -->
+    <div class="bg-white border border-[#e1e8e3] rounded-2xl shadow-sm overflow-hidden">
         @if($products->count() > 0)
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs text-slate-600">
-                    <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                <table class="w-full text-left text-xs text-[#141d1a]">
+                    <thead class="bg-[#f5f8fa] border-b border-[#e1e8e3] text-[#61716a] font-semibold">
                         <tr>
-                            <th scope="col" class="py-3.5 px-4 w-16 text-center">Foto</th>
-                            <th scope="col" class="py-3.5 px-4">Nama Produk &amp; Deskripsi</th>
-                            <th scope="col" class="py-3.5 px-4">Kategori</th>
-                            <th scope="col" class="py-3.5 px-4">Harga</th>
-                            <th scope="col" class="py-3.5 px-4 text-center">Status</th>
-                            <th scope="col" class="py-3.5 px-4 text-right">Aksi</th>
+                            <th scope="col" class="px-6 py-3.5">Foto &amp; Nama Produk</th>
+                            <th scope="col" class="px-6 py-3.5">Kategori</th>
+                            <th scope="col" class="px-6 py-3.5">Harga (Rp)</th>
+                            <th scope="col" class="px-6 py-3.5">Status</th>
+                            <th scope="col" class="px-6 py-3.5 text-right">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100">
+                    <tbody class="divide-y divide-[#e1e8e3]">
                         @foreach($products as $product)
-                            <tr class="hover:bg-slate-50/80 transition">
-                                <!-- Foto Produk -->
-                                <td class="py-3 px-4 text-center">
+                            <tr class="hover:bg-[#f9fbf7] transition">
+                                <!-- Foto & Nama Produk -->
+                                <td class="px-6 py-4 flex items-center gap-3">
                                     @if($product->photo_url)
                                         <img src="{{ $product->photo_url }}" alt="{{ $product->name }}"
-                                            class="w-12 h-12 rounded-lg object-cover mx-auto border border-slate-200 bg-slate-100"
-                                            onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs mx-auto border border-blue-100\'>{{ substr($product->name, 0, 1) }}</div>';">
+                                            class="w-9 h-9 rounded-lg object-cover border border-[#e1e8e3] bg-[#f5f8fa] shrink-0"
+                                            onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-9 h-9 rounded-lg bg-[#dcfce7] text-[#15803d] flex items-center justify-center font-bold text-xs shrink-0\'>☕</div>';">
                                     @else
-                                        <div class="w-12 h-12 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center font-bold text-xs mx-auto border border-slate-200">
-                                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
+                                        <div class="w-9 h-9 rounded-lg bg-[#dcfce7] text-[#15803d] flex items-center justify-center font-bold text-xs shrink-0">
+                                            ☕
                                         </div>
                                     @endif
-                                </td>
-
-                                <!-- Nama & Deskripsi -->
-                                <td class="py-3 px-4">
-                                    <div class="font-bold text-slate-900 text-sm">
-                                        {{ $product->name }}
+                                    <div class="min-w-0">
+                                        <p class="font-bold text-[#141d1a] truncate">{{ $product->name }}</p>
+                                        @if($product->description)
+                                            <p class="text-[#61716a] text-[11px] truncate max-w-xs">{{ $product->description }}</p>
+                                        @endif
                                     </div>
-                                    @if($product->description)
-                                        <p class="text-slate-500 text-xs mt-0.5 line-clamp-1 max-w-md">
-                                            {{ $product->description }}
-                                        </p>
-                                    @else
-                                        <span class="text-slate-400 italic text-[11px]">Tanpa deskripsi</span>
-                                    @endif
                                 </td>
 
                                 <!-- Kategori -->
-                                <td class="py-3 px-4">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                                        {{ $product->category }}
-                                    </span>
+                                <td class="px-6 py-4 text-[#61716a]">
+                                    {{ $product->category }}
                                 </td>
 
                                 <!-- Harga -->
-                                <td class="py-3 px-4 font-bold text-slate-900 font-mono text-xs">
-                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                <td class="px-6 py-4 font-bold text-[#16a34a] font-mono">
+                                    Rp{{ number_format($product->price, 0, ',', '.') }}
                                 </td>
 
                                 <!-- Status -->
-                                <td class="py-3 px-4 text-center">
+                                <td class="px-6 py-4">
                                     @if($product->status === 'Tampil')
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                            <span>Tampil</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#dcfce7] text-[#15803d]">
+                                            Tampil
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                            <span>Sembunyi</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#f1f5f8] text-[#64748b]">
+                                            Sembunyi
                                         </span>
                                     @endif
                                 </td>
 
                                 <!-- Aksi -->
-                                <td class="py-3 px-4 text-right">
-                                    <div class="inline-flex items-center gap-1.5">
+                                <td class="px-6 py-4 text-right">
+                                    <div class="inline-flex items-center gap-3">
                                         <a href="{{ route('products.edit', $product) }}"
-                                            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:text-blue-600 hover:bg-blue-50 text-xs font-semibold transition"
-                                            title="Edit data produk">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                            <span>Edit</span>
+                                            class="font-semibold text-[#16a34a] hover:underline">
+                                            Ubah
                                         </a>
-
+                                        <span class="text-[#e1e8e3]">&bull;</span>
                                         <button type="button"
                                             onclick="openDeleteModal('{{ route('products.destroy', $product) }}', '{{ addslashes($product->name) }}')"
-                                            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-semibold transition"
-                                            title="Hapus produk">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                            <span>Hapus</span>
+                                            class="font-semibold text-[#b91c1c] hover:underline">
+                                            Hapus
                                         </button>
                                     </div>
                                 </td>
@@ -198,41 +133,19 @@
                 </table>
             </div>
 
-            <!-- Pagination Bar -->
+            <!-- Pagination jika lebih dari 1 halaman -->
             @if($products->hasPages())
-                <div class="p-4 border-t border-slate-200 bg-slate-50/50">
+                <div class="p-4 border-t border-[#e1e8e3] bg-[#fcfdfc]">
                     {{ $products->links() }}
                 </div>
             @endif
         @else
-            <!-- Zero State / Hasil Pencarian Kosong -->
-            <div class="py-12 px-4 text-center">
-                <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4 border border-blue-100">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                </div>
-                <h3 class="text-base font-bold text-slate-800">Tidak ada produk ditemukan</h3>
-                <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                    @if(!empty($filters['q']) || !empty($filters['category']) || !empty($filters['status']))
-                        Tidak ada produk yang sesuai dengan kriteria filter pencarian Anda. Silakan coba kata kunci lain atau reset filter.
-                    @else
-                        Katalog produk UMKM Anda masih kosong. Mulai tambahkan produk atau paket layanan pertama Anda sekarang!
-                    @endif
-                </p>
-                <div class="mt-4 flex items-center justify-center gap-2">
-                    @if(!empty($filters['q']) || !empty($filters['category']) || !empty($filters['status']))
-                        <a href="{{ route('products.index') }}"
-                            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
-                            <span>Reset Filter</span>
-                        </a>
-                    @endif
-                    <a href="{{ route('products.create') }}"
-                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Tambah Produk Baru</span>
+            <div class="p-12 text-center text-xs text-[#61716a]">
+                <p class="font-semibold text-[#141d1a]">Belum ada produk ditemukan.</p>
+                <p class="mt-1">Silakan tambah produk baru untuk ditampilkan pada etalase tokomu.</p>
+                <div class="mt-4">
+                    <a href="{{ route('products.create') }}" class="px-4 py-2 rounded-xl bg-[#16a34a] text-white font-semibold inline-block">
+                        + Tambah Produk Baru
                     </a>
                 </div>
             </div>
@@ -240,69 +153,43 @@
     </div>
 </div>
 
-<!-- Modal Konfirmasi Hapus Produk -->
-<div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-scale-in">
-        <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-            </div>
-            <div class="flex-1">
-                <h3 id="deleteModalTitle" class="text-base font-bold text-slate-900">
-                    Konfirmasi Hapus Produk
-                </h3>
-                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                    Apakah Anda yakin ingin menghapus produk <strong id="modalProductName" class="text-slate-900 font-bold"></strong> dari katalog?
-                </p>
-                <div class="mt-2 p-2.5 rounded-lg bg-rose-50 border border-rose-100 text-[11px] text-rose-700">
-                    Peringatan: Produk ini akan dihapus secara permanen dari katalog dan tidak akan lagi muncul di halaman website profil publik UMKM Anda.
-                </div>
+<!-- Modal Konfirmasi Hapus Produk Figcraft -->
+<div id="deleteModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-[#e1e8e3] max-w-sm w-full p-6 shadow-xl space-y-4">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl">🗑️</span>
+            <div>
+                <h3 class="text-sm font-bold text-[#141d1a]">Konfirmasi Hapus Produk</h3>
+                <p class="text-xs text-[#61716a] mt-0.5">Tindakan ini tidak dapat dibatalkan.</p>
             </div>
         </div>
-
-        <div class="mt-6 flex items-center justify-end gap-2.5">
+        <p class="text-xs text-[#141d1a]">
+            Apakah Anda yakin ingin menghapus produk <strong id="deleteProductName" class="text-[#b91c1c]"></strong>?
+        </p>
+        <form id="deleteForm" method="POST" action="" class="flex items-center justify-end gap-3 pt-2">
+            @csrf
+            @method('DELETE')
             <button type="button" onclick="closeDeleteModal()"
-                class="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition">
+                class="px-4 py-2 rounded-xl border border-[#e1e8e3] text-xs font-semibold text-[#61716a] hover:bg-[#f5f8fa] transition">
                 Batal
             </button>
-            <form id="deleteProductForm" method="POST" action="" class="inline">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                    class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm transition">
-                    Ya, Hapus Produk
-                </button>
-            </form>
-        </div>
+            <button type="submit"
+                class="px-4 py-2 rounded-xl bg-[#fee2e2] text-[#b91c1c] hover:bg-[#fecaca] text-xs font-bold transition">
+                Ya, Hapus Produk
+            </button>
+        </form>
     </div>
 </div>
 
 <script>
     function openDeleteModal(actionUrl, productName) {
-        document.getElementById('deleteProductForm').setAttribute('action', actionUrl);
-        document.getElementById('modalProductName').textContent = productName;
+        document.getElementById('deleteForm').action = actionUrl;
+        document.getElementById('deleteProductName').textContent = productName;
         document.getElementById('deleteModal').classList.remove('hidden');
     }
 
     function closeDeleteModal() {
         document.getElementById('deleteModal').classList.add('hidden');
     }
-
-    // Tutup modal jika user menekan tombol Escape
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeDeleteModal();
-        }
-    });
-
-    // Tutup modal jika user klik di luar area modal content
-    document.getElementById('deleteModal').addEventListener('click', function(event) {
-        if (event.target === this) {
-            closeDeleteModal();
-        }
-    });
 </script>
 @endsection
-

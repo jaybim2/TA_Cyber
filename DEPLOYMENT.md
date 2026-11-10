@@ -160,3 +160,4 @@ SESSION_SECURE_COOKIE=true
 ## 5. Pemeliharaan Selama Penilaian
 
 Aplikasi harus dipastikan tetap live dan menyala 24/7 hingga seluruh proses penilaian tugas besar diumumkan. Gunakan monitoring uptime gratis seperti **UptimeRobot** atau **Healthchecks.io** yang mengarah ke endpoint `/up`.
+

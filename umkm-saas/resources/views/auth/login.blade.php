@@ -1,78 +1,94 @@
-@extends('layouts.app', ['title' => 'Masuk ke Platform'])
+@extends('layouts.app', ['title' => 'Masuk - 🌿 UMKM Kita'])
 
 @section('content')
-<div class="max-w-md mx-auto px-4 sm:px-6 py-6">
-    <div class="text-center mb-8">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-3 border border-blue-200">
-            <span>🔐 Autentikasi Pengguna</span>
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center bg-[#f9fbf7]">
+    <!-- Card_Login (Layar 2 Figcraft) -->
+    <div class="max-w-[440px] w-full bg-white border border-[#e1e8e3] rounded-[20px] p-8 sm:p-10 shadow-xs space-y-6">
+        <!-- Logo & Header -->
+        <div class="text-center space-y-2">
+            <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 text-xl font-bold text-[#16a34a]">
+                <span>🌿</span>
+                <span>UMKM Kita</span>
+            </a>
+            <h1 class="text-2xl font-bold text-[#141d1a] tracking-tight">
+                Masuk ke Akun
+            </h1>
+            <p class="text-sm text-[#61716a]">
+                Selamat datang kembali! Silakan isi kredensial Anda.
+            </p>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Masuk ke Akun Anda</h1>
-        <p class="text-sm text-slate-600 mt-2">
-            Silakan masukkan email dan password terdaftar untuk mengelola platform atau UMKM Anda.
-        </p>
-    </div>
 
-    @if ($errors->any())
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm shadow-sm">
-            <div class="font-semibold flex items-center gap-2 mb-1">
-                <svg class="w-5 h-5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <span>Gagal Masuk</span>
+        <!-- Alert Rate Limiting & Error Validasi -->
+        @if ($errors->has('email') && str_contains(strtolower($errors->first('email')), 'terlalu banyak'))
+            <div class="p-3.5 rounded-[8px] bg-[#fee2e2] border border-[#f5b2b2] text-[#b91c1c] text-xs space-y-1">
+                <div class="font-medium flex items-center gap-1.5">
+                    <span>⚠️</span>
+                    <span>Percobaan login gagal 5x. Akses dibatasi sementara.</span>
+                </div>
+                <div class="text-[11px] text-[#b91c1c]/90">
+                    {{ $errors->first('email') }}
+                </div>
             </div>
-            <ul class="list-disc list-inside space-y-1 text-xs text-rose-700">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        @elseif ($errors->any())
+            <div class="p-3 rounded-[8px] bg-[#fee2e2] border border-[#f5b2b2] text-[#b91c1c] text-xs font-medium">
+                {{ $errors->first() }}
+            </div>
+        @endif
 
-    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden p-6 sm:p-8">
-        <form action="{{ url('/login') }}" method="POST" class="space-y-5">
+        <!-- Form Login -->
+        <form method="POST" action="{{ route('login') }}" class="space-y-4">
             @csrf
 
             <!-- Field Email -->
             <div>
-                <label for="email" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Email Pengguna
+                <label for="email" class="block text-xs font-medium text-[#141d1a] mb-1.5">
+                    Alamat Email
                 </label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus
-                    placeholder="nama@domain.com"
-                    class="w-full px-3.5 py-2.5 rounded-lg border @error('email') border-rose-300 bg-rose-50/50 @else border-slate-300 @enderror text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                <div class="relative">
+                    <input type="email" name="email" id="email" required autocomplete="email"
+                        value="{{ old('email') }}"
+                        placeholder="admin@tokoabc.com"
+                        class="w-full px-3.5 py-2.5 rounded-[10px] bg-[#fcfdfc] border border-[#e1e8e3] text-sm text-[#141d1a] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a] transition">
+                    <span class="absolute right-3.5 top-2.5 text-sm pointer-events-none text-slate-400">👤</span>
+                </div>
             </div>
 
-            <!-- Field Password -->
+            <!-- Field Kata Sandi -->
             <div>
-                <label for="password" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Password
+                <label for="password" class="block text-xs font-medium text-[#141d1a] mb-1.5">
+                    Kata Sandi
                 </label>
-                <input type="password" name="password" id="password" required
-                    placeholder="Masukkan password Anda"
-                    class="w-full px-3.5 py-2.5 rounded-lg border @error('password') border-rose-300 bg-rose-50/50 @else border-slate-300 @enderror text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                <div class="relative">
+                    <input type="password" name="password" id="password" required autocomplete="current-password"
+                        placeholder="••••••••••••"
+                        class="w-full px-3.5 py-2.5 rounded-[10px] bg-[#fcfdfc] border border-[#e1e8e3] text-sm text-[#141d1a] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a] transition">
+                    <span class="absolute right-3.5 top-2.5 text-sm pointer-events-none text-slate-400">👁️</span>
+                </div>
             </div>
 
-            <!-- Tombol Masuk -->
+            <!-- Tombol Masuk (Btn_Submit Figcraft: fill #16a34a) -->
             <div class="pt-2">
                 <button type="submit"
-                    class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 shadow-sm hover:shadow transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    <span>Masuk</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
+                    class="w-full py-3 rounded-[10px] bg-[#16a34a] hover:bg-[#15803d] text-white font-semibold text-sm shadow-xs transition active:scale-95">
+                    Masuk
                 </button>
             </div>
         </form>
 
-        <div class="mt-6 pt-6 border-t border-slate-100 text-center">
-            <p class="text-xs text-slate-500">
-                Belum punya akun UMKM?
-                <a href="{{ url('/register-umkm') }}" class="font-semibold text-blue-600 hover:text-blue-700 hover:underline">
-                    Daftarkan UMKM Anda Sekarang
+        <!-- Divider & Link Daftar -->
+        <div class="pt-2 border-t border-[#e1e8e3] text-center space-y-3">
+            <p class="text-xs text-[#61716a]">
+                Belum punya akun UMKM? 
+                <a href="{{ route('register-umkm') }}" class="font-semibold text-[#16a34a] hover:underline">
+                    Daftar Baru
                 </a>
+            </p>
+
+            <!-- Note Peran Pengalihan -->
+            <p class="text-[11px] text-[#61716a]/80">
+                Vendor &rarr; Dashboard Vendor &bull; Admin &rarr; Dashboard UMKM
             </p>
         </div>
     </div>
 </div>
 @endsection
-

@@ -16,3 +16,7 @@ db.sqlite3
 
 # Umum
 .DS_Store
+
+# Scratch / Agent workspace
+workspace/
+.agent/
