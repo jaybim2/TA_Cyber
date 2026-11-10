@@ -52,14 +52,31 @@
                 @auth
                     <span class="text-slate-600 text-xs sm:text-sm">
                         Halo, <strong class="text-slate-900">{{ Auth::user()->name }}</strong>
-                        @if(Auth::user()->organization)
+                        @if(Auth::user()->isVendor())
+                            <span class="ml-1 text-[11px] bg-purple-100 text-purple-700 font-semibold px-2 py-0.5 rounded-full">Vendor</span>
+                        @elseif(Auth::user()->organization)
                             <span class="text-slate-400">({{ Auth::user()->organization->name }})</span>
                         @endif
                     </span>
-                    <a href="{{ url('/dashboard') }}" class="px-3.5 py-2 text-slate-700 hover:text-blue-600 transition">
-                        Dashboard
-                    </a>
+                    @if(Auth::user()->isVendor())
+                        <a href="{{ url('/vendor') }}" class="px-3 py-1.5 rounded-lg text-slate-700 hover:text-blue-600 transition">
+                            Area Vendor
+                        </a>
+                    @else
+                        <a href="{{ url('/dashboard') }}" class="px-3 py-1.5 rounded-lg text-slate-700 hover:text-blue-600 transition">
+                            Dashboard
+                        </a>
+                    @endif
+                    <form action="{{ url('/logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-rose-600 hover:bg-rose-50 text-xs font-semibold transition">
+                            Keluar
+                        </button>
+                    </form>
                 @else
+                    <a href="{{ url('/login') }}" class="px-3.5 py-2 text-slate-700 hover:text-blue-600 text-sm font-semibold transition">
+                        Masuk
+                    </a>
                     <a href="{{ url('/register-umkm') }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 shadow-sm hover:shadow transition">
                         Daftar UMKM
                     </a>
@@ -104,3 +121,4 @@
     </footer>
 </body>
 </html>
+

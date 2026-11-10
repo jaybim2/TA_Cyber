@@ -102,3 +102,4 @@ class RegisterUmkmController extends Controller
         return redirect()->route('dashboard')->with('success', 'Selamat datang! Pendaftaran UMKM "' . $user->organization->name . '" berhasil dan Anda telah login sebagai admin.');
     }
 }
+
