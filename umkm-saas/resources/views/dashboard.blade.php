@@ -87,9 +87,9 @@
             </div>
 
             <!-- Card 3: Total Pertanyaan -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow transition">
+            <a href="{{ route('inquiries.index') }}" class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow hover:border-amber-300 transition block group">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-slate-500">Total Pertanyaan</span>
+                    <span class="text-xs font-semibold text-slate-500 group-hover:text-amber-600 transition">Total Pertanyaan</span>
                     <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -100,15 +100,16 @@
                     <span class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ $stats['total_inquiries'] }}</span>
                     <span class="text-xs text-slate-500 ml-1">pesan</span>
                 </div>
-                <div class="mt-2 text-[11px] text-slate-500">
-                    Masuk dari pengunjung
+                <div class="mt-2 text-[11px] text-slate-500 flex items-center justify-between">
+                    <span>Masuk dari pengunjung</span>
+                    <span class="text-amber-600 font-semibold group-hover:underline">Buka &rarr;</span>
                 </div>
-            </div>
+            </a>
 
             <!-- Card 4: Pertanyaan Baru -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow transition">
+            <a href="{{ route('inquiries.index', ['status' => 'Baru']) }}" class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow hover:border-rose-300 transition block group">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-slate-500">Perlu Tindak Lanjut</span>
+                    <span class="text-xs font-semibold text-slate-500 group-hover:text-rose-600 transition">Perlu Tindak Lanjut</span>
                     <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -119,10 +120,11 @@
                     <span class="text-3xl font-extrabold text-rose-600 tracking-tight">{{ $stats['inquiries_baru'] }}</span>
                     <span class="text-xs text-slate-500 ml-1">baru</span>
                 </div>
-                <div class="mt-2 text-[11px] text-slate-500">
-                    Status pesan 'Baru'
+                <div class="mt-2 text-[11px] text-slate-500 flex items-center justify-between">
+                    <span>Status pesan 'Baru'</span>
+                    <span class="text-rose-600 font-semibold group-hover:underline">Lihat &rarr;</span>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 

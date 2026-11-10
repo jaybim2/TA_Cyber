@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterUmkmController;
+use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicUmkmController;
 use App\Http\Controllers\UmkmDashboardController;
@@ -40,6 +41,12 @@ Route::middleware(['auth', 'role:umkm_admin'])->group(function () {
     Route::resource('/dashboard/produk', ProductController::class)
         ->names('products')
         ->parameters(['produk' => 'product']);
+
+    // Layar 9: Daftar & Detail Pertanyaan Masuk (T13 / Slice 3a)
+    Route::get('/dashboard/pertanyaan', [InquiryController::class, 'index'])->name('inquiries.index');
+    Route::get('/dashboard/pertanyaan/{inquiry}', [InquiryController::class, 'show'])->name('inquiries.show');
+    Route::patch('/dashboard/pertanyaan/{inquiry}/status', [InquiryController::class, 'updateStatus'])->name('inquiries.update-status');
+    Route::delete('/dashboard/pertanyaan/{inquiry}', [InquiryController::class, 'destroy'])->name('inquiries.destroy');
 });
 
 // Layar 4 & 5: Dashboard Vendor & Daftar UMKM (Hanya Vendor yang terotentikasi)
@@ -47,5 +54,8 @@ Route::middleware(['auth', 'role:vendor'])->group(function () {
     Route::get('/vendor', [VendorDashboardController::class, 'index'])->name('vendor.dashboard');
 });
 
-// Layar 11: Halaman Publik UMKM (/u/{slug})
+// Layar 11 & Formulir Pertanyaan Publik (/u/{slug})
 Route::get('/u/{slug}', [PublicUmkmController::class, 'show'])->name('public.umkm.show');
+Route::post('/u/{slug}/pertanyaan', [PublicUmkmController::class, 'storeInquiry'])
+    ->name('public.umkm.inquiry')
+    ->middleware('throttle:10,1');

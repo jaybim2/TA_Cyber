@@ -58,11 +58,12 @@
                 </div>
             </a>
 
-            <!-- Navigasi Menu: Profil, Produk, Kontak -->
+            <!-- Navigasi Menu: Profil, Produk, Pertanyaan, Kontak -->
             <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
                 <a href="#profil" class="hover:text-blue-600 transition">Profil</a>
                 <a href="#produk" class="hover:text-blue-600 transition">Katalog Produk</a>
-                <a href="#kontak" class="hover:text-blue-600 transition">Kontak</a>
+                <a href="#pertanyaan" class="hover:text-blue-600 transition">Kirim Pertanyaan</a>
+                <a href="#kontak" class="hover:text-blue-600 transition">Kontak WA</a>
             </nav>
 
             <!-- Tombol CTA WhatsApp Cepat -->
@@ -312,26 +313,148 @@
                 </div>
             </section>
 
-            <!-- 5. Kontak Section: Informasi Hubungi Kami -->
-            <section id="kontak" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-3xl p-8 sm:p-12 shadow-md relative overflow-hidden">
-                    <div class="max-w-2xl space-y-4 relative z-10">
-                        <span class="text-xs font-bold text-blue-200 uppercase tracking-wider">Konsultasi &amp; Pemesanan</span>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                            Tertarik Bermitra atau Memesan Produk {{ $organization->name }}?
-                        </h2>
-                        <p class="text-blue-100 text-xs sm:text-sm leading-relaxed">
-                            Hubungi kami secara langsung melalui WhatsApp atau email untuk informasi harga grosir, ketersediaan stok, dan pengiriman ke seluruh wilayah.
-                        </p>
-                        <div class="pt-2 flex flex-wrap items-center gap-3">
+            <!-- 5. Pertanyaan & Kontak Section: Form Pertanyaan Langsung & Info Pemesanan (T13 / Layar 11) -->
+            <section id="pertanyaan" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <!-- Notifikasi Flash Pesan Pertanyaan -->
+                @if(session('inquiry_success'))
+                    <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm shadow-sm flex items-start gap-3.5">
+                        <svg class="w-6 h-6 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <strong class="font-bold block text-emerald-900">Pesan Berhasil Terkirim!</strong>
+                            <p class="mt-0.5 text-emerald-700 leading-relaxed">{{ session('inquiry_success') }}</p>
+                        </div>
+                    </div>
+                @endif
+
+                @if(session('inquiry_error'))
+                    <div class="p-5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm shadow-sm flex items-start gap-3.5">
+                        <svg class="w-6 h-6 text-rose-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <strong class="font-bold block text-rose-900">Pengiriman Ditolak</strong>
+                            <p class="mt-0.5 text-rose-700 leading-relaxed">{{ session('inquiry_error') }}</p>
+                        </div>
+                    </div>
+                @endif
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Kolom Kiri: Formulir Kirim Pertanyaan Pengunjung (Layar 11 Form Pertanyaan) -->
+                    <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+                        <div class="border-b border-slate-100 pb-4 mb-6">
+                            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Layanan Pengunjung</span>
+                            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mt-1">
+                                Kirim Pertanyaan ke {{ $organization->name }}
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                                Punya pertanyaan seputar ketersediaan stok, harga khusus, atau layanan pengiriman? Kirimkan pesan Anda di bawah ini.
+                            </p>
+                        </div>
+
+                        <form method="POST" action="{{ route('public.umkm.inquiry', $organization->slug) }}" class="space-y-4">
+                            @csrf
+
+                            <!-- Nama Lengkap Pengunjung -->
+                            <div>
+                                <label for="visitor_name" class="block text-xs font-semibold text-slate-700 mb-1">
+                                    Nama Lengkap Anda <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="text" name="visitor_name" id="visitor_name" required maxlength="150"
+                                    value="{{ old('visitor_name') }}"
+                                    placeholder="Contoh: Budi Santoso, Ibu Ratna"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border {{ $errors->has('visitor_name') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                @error('visitor_name')
+                                    <p class="text-rose-600 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Kontak Pengunjung (Opsional: No WA / Email) -->
+                            <div>
+                                <label for="visitor_contact" class="block text-xs font-semibold text-slate-700 mb-1">
+                                    Kontak untuk Balasan (Opsional)
+                                </label>
+                                <input type="text" name="visitor_contact" id="visitor_contact" maxlength="100"
+                                    value="{{ old('visitor_contact') }}"
+                                    placeholder="Contoh: 08123456789 (WhatsApp) atau budi@example.com"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border {{ $errors->has('visitor_contact') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                @error('visitor_contact')
+                                    <p class="text-rose-600 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                                <p class="text-[11px] text-slate-400 mt-1">Cantumkan WhatsApp atau email agar admin UMKM dapat membalas pesan Anda.</p>
+                            </div>
+
+                            <!-- Pesan / Pertanyaan -->
+                            <div>
+                                <label for="message" class="block text-xs font-semibold text-slate-700 mb-1">
+                                    Pesan / Pertanyaan Anda <span class="text-rose-500">*</span>
+                                </label>
+                                <textarea name="message" id="message" rows="4" required maxlength="2000"
+                                    placeholder="Tuliskan pertanyaan Anda mengenai produk, estimasi pemesanan, atau lainnya..."
+                                    class="w-full px-3.5 py-2.5 rounded-xl border {{ $errors->has('message') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">{{ old('message') }}</textarea>
+                                @error('message')
+                                    <p class="text-rose-600 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Proteksi & Tombol Kirim -->
+                            <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <span class="text-[11px] text-slate-400 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                    <span>Dilindungi Rate Limiting Anti-Spam</span>
+                                </span>
+                                <button type="submit"
+                                    class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-sm hover:shadow transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                    </svg>
+                                    <span>Kirim Pertanyaan</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Kolom Kanan: Banner Kontak Cepat & Chat WhatsApp Langsung (id=kontak) -->
+                    <div id="kontak" class="lg:col-span-5 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden flex flex-col justify-between h-full space-y-6">
+                        <div class="space-y-4 relative z-10">
+                            <span class="text-xs font-bold text-blue-200 uppercase tracking-wider">Konsultasi Cepat</span>
+                            <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight">
+                                Butuh Respons Cepat via WhatsApp?
+                            </h3>
+                            <p class="text-blue-100 text-xs sm:text-sm leading-relaxed">
+                                Anda juga dapat menghubungi tim {{ $organization->name }} secara langsung melalui WhatsApp untuk konsultasi pesanan instan.
+                            </p>
+
+                            <div class="space-y-2 pt-2 text-xs text-blue-100">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span>Pemesanan eceran dan partai besar</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span>Konsultasi estimasi ongkos kirim</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 relative z-10">
                             @if($cleanPhone)
                                 <a href="{{ $waGeneralUrl }}" target="_blank"
-                                    class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-blue-700 hover:bg-blue-50 text-xs sm:text-sm font-bold shadow transition active:scale-95">
-                                    <span>Chat Langsung via WhatsApp</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-blue-700 hover:bg-blue-50 text-xs sm:text-sm font-bold shadow transition active:scale-95">
+                                    <svg class="w-4 h-4 fill-current text-emerald-600" viewBox="0 0 24 24">
+                                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824z" />
                                     </svg>
+                                    <span>Chat Langsung via WhatsApp</span>
                                 </a>
+                            @else
+                                <span class="text-xs text-blue-200 italic">Nomor WhatsApp belum dikonfigurasi. Silakan gunakan form pertanyaan di samping.</span>
                             @endif
                         </div>
                     </div>

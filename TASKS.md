@@ -74,23 +74,22 @@ Relasi: Organization hasMany User/Product/Inquiry. User belongsTo Organization. 
 
 ---
 
-### T12 — Slice 2c: Produk CRUD
+### T13 — Slice 3a: Pertanyaan masuk
 
-**Tujuan:** Admin UMKM bisa mengelola katalognya sendiri.
+**Tujuan:** Pengunjung bisa bertanya, admin bisa menindaklanjuti dengan status.
 
 **Prompt untuk Antigravity:**
 
-> Kerjakan T12 saja, layar Daftar & Form Produk. Buat CRUD produk lengkap dengan filter dan validasi, selalu difilter ke UMKM milik user login.
+> Kerjakan T13 saja. Buat form pertanyaan di halaman publik plus daftar dan detail pertanyaan untuk admin UMKM, dengan alur status Baru → Dibalas → Selesai.
 
 **Langkah:**
 
-- [x] Daftar: cari nama, filter kategori, filter status Tampil/Sembunyi, tabel foto/nama/kategori/harga/status
-- [x] Form: nama, kategori dropdown, harga >= 0, deskripsi, foto URL opsional, status Tampil/Sembunyi
-- [x] Hapus pakai modal konfirmasi
-- [x] Tambah produk live: Peyeum Keju harus langsung muncul di halaman publik setelah ditambah
+- [x] Form publik: nama wajib, kontak opsional, pesan wajib, tombol Kirim Pertanyaan, pesan sukses setelah kirim, rate limiting anti-spam
+- [x] Daftar admin: cari nama/pesan, filter status Baru/Dibalas/Selesai, tabel tanggal/nama/pesan/status
+- [x] Detail: isi pesan lengkap, kontak pengunjung, tombol Tandai Dibalas, Tandai Selesai, Buka Lagi, Hapus
 
-**Kriteria selesai:** Tambah, lihat, ubah, hapus produk berhasil, dan produk UMKM lain tidak bisa dibuka atau diubah lewat ID di URL.
+**Kriteria selesai:** Pertanyaan baru dari `/u/peyeum-kuningan` masuk ke UMKM 2 dengan status Baru, bukan ke Toko ABC. Pesan yang ditampilkan di-escape.
 
-**Jangan lakukan:** Jangan buat laporan atau pertanyaan di task ini.
+**Jangan lakukan:** Jangan buat laporan atau landing di task ini.
 
 ---
