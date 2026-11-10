@@ -1,0 +1,18 @@
+# Secret — JANGAN PERNAH di-commit
+.env
+.env.local
+
+# Laravel / PHP
+/vendor/
+node_modules/
+storage/logs/*.log
+
+# Python / Django
+__pycache__/
+*.pyc
+.venv/
+venv/
+db.sqlite3
+
+# Umum
+.DS_Store
