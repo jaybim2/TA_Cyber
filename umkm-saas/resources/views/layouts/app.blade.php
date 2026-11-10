@@ -72,6 +72,9 @@
                         <a href="{{ route('inquiries.index') }}" class="px-3 py-1.5 rounded-lg {{ request()->is('dashboard/pertanyaan*') ? 'text-blue-600 font-semibold bg-blue-50' : 'text-slate-700 hover:text-blue-600' }} transition">
                             Pertanyaan Masuk
                         </a>
+                        <a href="{{ route('reports.index') }}" class="px-3 py-1.5 rounded-lg {{ request()->is('dashboard/laporan*') ? 'text-blue-600 font-semibold bg-blue-50' : 'text-slate-700 hover:text-blue-600' }} transition">
+                            Laporan &amp; Ekspor
+                        </a>
                         <a href="{{ route('umkm.profile.edit') }}" class="px-3 py-1.5 rounded-lg {{ request()->is('dashboard/profil*') ? 'text-blue-600 font-semibold bg-blue-50' : 'text-slate-700 hover:text-blue-600' }} transition">
                             Profil Usaha
                         </a>

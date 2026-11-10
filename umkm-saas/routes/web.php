@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterUmkmController;
 use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicUmkmController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UmkmDashboardController;
 use App\Http\Controllers\UmkmProfileController;
 use App\Http\Controllers\VendorDashboardController;
@@ -47,11 +48,17 @@ Route::middleware(['auth', 'role:umkm_admin'])->group(function () {
     Route::get('/dashboard/pertanyaan/{inquiry}', [InquiryController::class, 'show'])->name('inquiries.show');
     Route::patch('/dashboard/pertanyaan/{inquiry}/status', [InquiryController::class, 'updateStatus'])->name('inquiries.update-status');
     Route::delete('/dashboard/pertanyaan/{inquiry}', [InquiryController::class, 'destroy'])->name('inquiries.destroy');
+
+    // Layar 10: Laporan & Ekspor UMKM (T14 / Slice 3b)
+    Route::get('/dashboard/laporan', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/dashboard/laporan/ekspor-produk', [ReportController::class, 'exportProductsCsv'])->name('reports.export-products');
+    Route::get('/dashboard/laporan/ekspor-pertanyaan', [ReportController::class, 'exportInquiriesCsv'])->name('reports.export-inquiries');
 });
 
 // Layar 4 & 5: Dashboard Vendor & Daftar UMKM (Hanya Vendor yang terotentikasi)
 Route::middleware(['auth', 'role:vendor'])->group(function () {
     Route::get('/vendor', [VendorDashboardController::class, 'index'])->name('vendor.dashboard');
+    Route::get('/vendor/ekspor', [VendorDashboardController::class, 'exportCsv'])->name('vendor.export');
 });
 
 // Layar 11 & Formulir Pertanyaan Publik (/u/{slug})

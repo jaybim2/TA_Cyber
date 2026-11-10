@@ -74,22 +74,25 @@ Relasi: Organization hasMany User/Product/Inquiry. User belongsTo Organization. 
 
 ---
 
-### T13 — Slice 3a: Pertanyaan masuk
+### T14 — Slice 3b: Laporan + Ekspor
 
-**Tujuan:** Pengunjung bisa bertanya, admin bisa menindaklanjuti dengan status.
+**Tujuan:** Laporan per UMKM dan agregat vendor, bisa diekspor.
 
 **Prompt untuk Antigravity:**
 
-> Kerjakan T13 saja. Buat form pertanyaan di halaman publik plus daftar dan detail pertanyaan untuk admin UMKM, dengan alur status Baru → Dibalas → Selesai.
+> Kerjakan T14 saja, layar Laporan & Ekspor. Buat laporan dengan filter, grafik sederhana, tabel rekap, dan ekspor CSV. PDF hanya kalau sempat setelah CSV jalan.
 
 **Langkah:**
 
-- [x] Form publik: nama wajib, kontak opsional, pesan wajib, tombol Kirim Pertanyaan, pesan sukses setelah kirim, rate limiting anti-spam
-- [x] Daftar admin: cari nama/pesan, filter status Baru/Dibalas/Selesai, tabel tanggal/nama/pesan/status
-- [x] Detail: isi pesan lengkap, kontak pengunjung, tombol Tandai Dibalas, Tandai Selesai, Buka Lagi, Hapus
+- [x] Filter: rentang tanggal, kategori produk, status pertanyaan
+- [x] Kartu: total produk, produk Tampil, total pertanyaan, Baru/Dibalas/Selesai
+- [x] Grafik: produk per kategori, pertanyaan per status
+- [x] Tabel rekap produk dan rekap pertanyaan
+- [x] Tombol Ekspor CSV Produk dan Ekspor CSV Pertanyaan. Nama file otomatis, mis. `Laporan_TokoABC_2026-11.csv`.
+- [x] Laporan vendor hanya angka agregat, tanpa isi pesan UMKM
 
-**Kriteria selesai:** Pertanyaan baru dari `/u/peyeum-kuningan` masuk ke UMKM 2 dengan status Baru, bukan ke Toko ABC. Pesan yang ditampilkan di-escape.
+**Kriteria selesai:** Angka di dashboard, grafik, tabel, dan file CSV yang diekspor sama. Filter kosong menampilkan pesan dan tombol Reset Filter.
 
-**Jangan lakukan:** Jangan buat laporan atau landing di task ini.
+**Jangan lakukan:** Jangan buat deploy atau ubah skema di task ini.
 
 ---

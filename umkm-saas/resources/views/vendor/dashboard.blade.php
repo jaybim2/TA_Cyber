@@ -16,7 +16,14 @@
                 Pantau angka agregat seluruh ekosistem UMKM dan daftar UMKM terdaftar (Mode Baca Saja).
             </p>
         </div>
-        <div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('vendor.export') }}"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>Ekspor Rekap CSV (Agregat)</span>
+            </a>
             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
                 <span class="w-2 h-2 rounded-full bg-purple-500"></span>
                 Login: {{ $user->name }}
