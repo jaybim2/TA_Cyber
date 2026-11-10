@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterUmkmController;
+use App\Http\Controllers\UmkmDashboardController;
+use App\Http\Controllers\VendorDashboardController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -26,20 +28,10 @@ Route::post('/register-umkm', [RegisterUmkmController::class, 'store']);
 
 // Layar 6: Dashboard UMKM (Hanya Admin UMKM yang terotentikasi)
 Route::middleware(['auth', 'role:umkm_admin'])->group(function () {
-    Route::get('/dashboard', function () {
-        $user = Auth::user();
-        return view('dashboard', [
-            'user' => $user,
-            'organization' => $user->organization,
-        ]);
-    })->name('dashboard');
+    Route::get('/dashboard', [UmkmDashboardController::class, 'index'])->name('dashboard');
 });
 
-// Layar 4: Dashboard Vendor (Hanya Vendor yang terotentikasi)
+// Layar 4 & 5: Dashboard Vendor & Daftar UMKM (Hanya Vendor yang terotentikasi)
 Route::middleware(['auth', 'role:vendor'])->group(function () {
-    Route::get('/vendor', function () {
-        return view('vendor.dashboard', [
-            'user' => Auth::user(),
-        ]);
-    })->name('vendor.dashboard');
+    Route::get('/vendor', [VendorDashboardController::class, 'index'])->name('vendor.dashboard');
 });

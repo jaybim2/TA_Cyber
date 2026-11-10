@@ -87,3 +87,4 @@ class LoginController extends Controller
         return redirect()->route('login')->with('success', 'Anda telah berhasil keluar dari akun.');
     }
 }
+
