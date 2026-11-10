@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterUmkmController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicUmkmController;
 use App\Http\Controllers\UmkmDashboardController;
 use App\Http\Controllers\UmkmProfileController;
@@ -28,12 +29,17 @@ Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 Route::get('/register-umkm', [RegisterUmkmController::class, 'create'])->name('register-umkm');
 Route::post('/register-umkm', [RegisterUmkmController::class, 'store']);
 
-// Layar 6 & Layar 7: Dashboard & Profil UMKM (Hanya Admin UMKM yang terotentikasi)
+// Layar 6 & Layar 7 & Layar 8: Dashboard, Profil, dan Produk UMKM (Hanya Admin UMKM yang terotentikasi)
 Route::middleware(['auth', 'role:umkm_admin'])->group(function () {
     Route::get('/dashboard', [UmkmDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/profil', [UmkmProfileController::class, 'edit'])->name('umkm.profile.edit');
     Route::get('/dashboard/profil/{organization}', [UmkmProfileController::class, 'editById'])->name('umkm.profile.edit.id');
     Route::put('/dashboard/profil', [UmkmProfileController::class, 'update'])->name('umkm.profile.update');
+
+    // Layar 8: Daftar & Form Produk (CRUD Produk UMKM)
+    Route::resource('/dashboard/produk', ProductController::class)
+        ->names('products')
+        ->parameters(['produk' => 'product']);
 });
 
 // Layar 4 & 5: Dashboard Vendor & Daftar UMKM (Hanya Vendor yang terotentikasi)
