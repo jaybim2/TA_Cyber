@@ -111,3 +111,4 @@ class UmkmProfileController extends Controller
         return redirect()->route('umkm.profile.edit')->with('success', 'Profil UMKM "' . $organization->name . '" berhasil diperbarui!');
     }
 }
+
