@@ -74,25 +74,25 @@ Relasi: Organization hasMany User/Product/Inquiry. User belongsTo Organization. 
 
 ---
 
-### T14 — Slice 3b: Laporan + Ekspor
+### T15 — Slice 4a: Landing Page Platform
 
-**Tujuan:** Laporan per UMKM dan agregat vendor, bisa diekspor.
+**Tujuan:** Pengunjung umum paham platform ini dalam 30 detik, lalu bisa daftar atau masuk.
 
 **Prompt untuk Antigravity:**
 
-> Kerjakan T14 saja, layar Laporan & Ekspor. Buat laporan dengan filter, grafik sederhana, tabel rekap, dan ekspor CSV. PDF hanya kalau sempat setelah CSV jalan.
+> Kerjakan T15 saja, layar Landing Page Platform. Buat halaman publik statis dengan hero, cara kerja, fitur, dan contoh UMKM. Jangan buat dashboard atau CRUD di task ini.
 
 **Langkah:**
 
-- [x] Filter: rentang tanggal, kategori produk, status pertanyaan
-- [x] Kartu: total produk, produk Tampil, total pertanyaan, Baru/Dibalas/Selesai
-- [x] Grafik: produk per kategori, pertanyaan per status
-- [x] Tabel rekap produk dan rekap pertanyaan
-- [x] Tombol Ekspor CSV Produk dan Ekspor CSV Pertanyaan. Nama file otomatis, mis. `Laporan_TokoABC_2026-11.csv`.
-- [x] Laporan vendor hanya angka agregat, tanpa isi pesan UMKM
+- [x] Header: nama platform, menu Beranda/Cara Kerja/Fitur, tombol Masuk dan Daftar UMKM
+- [x] Hero: headline "Website UMKM Rapi, Tanpa Bangun dari Nol", subheadline, tombol Daftar UMKM dan Lihat Contoh Halaman
+- [x] 3 langkah: Daftar UMKM → Lengkapi Profil & Produk → Bagikan Link Halaman
+- [x] 4 kartu fitur + 1 kartu contoh Toko ABC yang mengarah ke `/u/toko-abc`
+- [x] Footer: kontak vendor, link Masuk/Daftar
+- [x] Kalau sudah login, `/` diarahkan ke dashboard, bukan landing lagi
 
-**Kriteria selesai:** Angka di dashboard, grafik, tabel, dan file CSV yang diekspor sama. Filter kosong menampilkan pesan dan tombol Reset Filter.
+**Kriteria selesai:** Pengunjung yang belum login melihat landing, yang sudah login langsung ke dashboard. Tidak ada harga atau pembayaran di layar ini.
 
-**Jangan lakukan:** Jangan buat deploy atau ubah skema di task ini.
+**Jangan lakukan:** Jangan tambah template atau fitur baru di task ini.
 
 ---

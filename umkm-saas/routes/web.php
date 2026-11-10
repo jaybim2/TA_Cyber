@@ -12,15 +12,15 @@ use App\Http\Controllers\VendorDashboardController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Rute Index (Landing sementara di Slice 1 & 2, diarahkan berdasarkan status login)
+// Layar 1: Landing Page Platform (Publik, redirect ke dashboard jika sudah login)
 Route::get('/', function () {
     if (Auth::check()) {
         return Auth::user()->isVendor()
             ? redirect()->route('vendor.dashboard')
             : redirect()->route('dashboard');
     }
-    return redirect()->route('login');
-});
+    return view('landing');
+})->name('landing');
 
 // Layar 2: Login & Logout
 Route::get('/login', [LoginController::class, 'create'])->name('login');
