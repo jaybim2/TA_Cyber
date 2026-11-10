@@ -66,6 +66,9 @@
                         <a href="{{ url('/dashboard') }}" class="px-3 py-1.5 rounded-lg text-slate-700 hover:text-blue-600 transition">
                             Dashboard
                         </a>
+                        <a href="{{ route('umkm.profile.edit') }}" class="px-3 py-1.5 rounded-lg text-slate-700 hover:text-blue-600 transition">
+                            Profil Usaha
+                        </a>
                     @endif
                     <form action="{{ url('/logout') }}" method="POST" class="inline">
                         @csrf
