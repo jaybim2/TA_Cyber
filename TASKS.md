@@ -74,32 +74,24 @@ Relasi: Organization hasMany User/Product/Inquiry. User belongsTo Organization. 
 
 ---
 
-### T16 — Slice 4b: Self-testing, deploy, dan README final
+## Daftar cek akhir sebelum kumpul
 
-**Tujuan:** Aplikasi live, aman, dan bisa diserahkan dengan bukti.
-
-**Prompt untuk Antigravity:**
-
-> Kerjakan T16 saja, dan hanya setelah T01–T15 selesai. Lakukan self-testing keamanan, siapkan deploy, dan rapikan README serta outline laporan. Jangan tambah fitur baru di task ini.
-
-**Langkah:**
-
-- [x] Self-testing, dokumentasikan di tabel skenario/cara uji/hasil/perbaikan, minimal 5 skenario, dengan bukti sebelum-sesudah untuk yang diperbaiki:
-
-- SQL Injection di kolom cari produk dan parameter URL
-- XSS di deskripsi produk dan pesan pertanyaan
-- IDOR: admin UMKM A membuka produk/pertanyaan UMKM B lewat ID/slug di URL
-- Peran: admin UMKM membuka `/vendor`, pengunjung membuka `/dashboard`
-- Password lemah ditolak + rate limiting login + logout mengunci dashboard
-- HTTPS + security headers (securityheaders.com / SSL Labs)
-- Secret tidak ter-commit + audit dependency
-
-- [x] Deploy: hosting publik via FQDN, wajib HTTPS valid, bukan localhost/IP mentah, aplikasi tetap aktif sampai nilai diumumkan
-- [x] README final: deskripsi, fitur, teknologi, cara instalasi dan jalan lokal, konfigurasi env tanpa nilai rahasia, URL aplikasi, akun uji (vendor + admin UMKM), ringkasan pemakaian AI dan hasil self-testing
-- [x] Outline laporan PDF: identitas, latar belakang dan tujuan, fitur utama, arsitektur + diagram, penerapan keamanan, potensi skripsi, hasil self-testing, screenshot (login, kelola produk, halaman publik, laporan, bukti HTTPS), kendala dan rencana perbaikan
-
-**Kriteria selesai:** URL publik bisa dibuka dosen, login akun uji berhasil, laporan dan README lengkap, dan tidak ada secret di repo.
-
-**Jangan lakukan:** Jangan tambah fitur di task ini, apalagi payment, booking, atau template baru.
+- [x] Judul di laporan dan README sama dengan judul terkunci
+- [x] Semua rute di atas bisa dibuka sesuai peran
+- [x] Produk Sembunyi tidak muncul di halaman publik
+- [x] Admin UMKM lain tidak bisa melihat atau mengubah data UMKM lain
+- [x] File CSV yang diekspor isinya sama dengan yang di layar
+- [x] Tidak ada `.env`, password, atau API key di repo atau di prompt AI
 
 ---
+
+## File acuan (jangan diubah dari PRD ini, kecuali ada koreksi)
+
+- Skema database: `workspace/cyber-security-umkm-database-schema.md`
+- Checklist Slice 1: `workspace/cyber-security-umkm-slice1-checklist.md`
+- Quickstart Laravel: `workspace/cyber-security-umkm-laravel-quickstart.md`
+- Migration siap salin: `workspace/umkm-saas-migrations/`
+- Starter Tugas 1a: `workspace/umkm-saas-starter/`
+- Preflight: `workspace/cyber-security-umkm-preflight.md`
+
+*PRD ini dibuat 2026-11-10 untuk build di Antigravity, berdasarkan judul dan stack yang dikunci 2026-11-09. Kalau ada yang bertentangan antara PRD ini dan file acuan lama, ikuti PRD ini untuk urutan tugas, dan ikuti skema database untuk nama tabel dan kolom.*
